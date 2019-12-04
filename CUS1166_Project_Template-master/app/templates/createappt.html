@@ -1,0 +1,32 @@
+{% extends "menu.html" %}
+
+{% block main_content %}
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-lg-12">
+                <div class="card px-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Create An Appointment</h4>
+
+                        <h4>Please Fill In The Form</h4>
+                            <form action="" method="post">
+                                {{ form.hidden_tag() }}
+                                <div class="form-group">
+                                    {{ form.title.label }}
+                                    {% if form.title.errors %}
+                                        {% for e in form.title.errors %}
+                                            <p class="help-block text-danger">{{ e }}</p>
+                                        {% endfor %}
+                                    {% endif %}
+                                {{ form.title(class_='form-control') }}
+                                </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
