@@ -12,9 +12,9 @@ from flask import Blueprint
 
 ## migrate = Migrate()
 ## login = LoginManager()
-db=SQLAlchemy()
+db = SQLAlchemy()
 
-bp = Blueprint('main',__name__, template_folder='../main/templates')
+#bp = Blueprint('main',__name__, template_folder='../main/templates')
 
 def create_app(config_class=Config):
 

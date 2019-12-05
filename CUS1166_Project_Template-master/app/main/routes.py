@@ -1,8 +1,12 @@
-from flask import render_template, redirect, url_for, Blueprint, Flask, request
+import datetime
+from flask import render_template, redirect, url_for, request, flash
+from app.main import *
 from app.main import bp
-from app import db, models
-from app.main.forms import TaskForm
-from app.models import Task, Appointment
+from sqlalchemy.testing import db
+from app.models import *
+from app.models import Task
+from app.models import Appointment
+from .forms import TaskForm, AppointmentF
 
 # Main route of the applicaitons.
 @bp.route('/', methods=['GET','POST'])
@@ -11,44 +15,56 @@ def index():
 
 @bp.route('/appointment', methods=['GET', 'POST'])
 def appointment():
-    return render_template("main.appointment")
+    return render_template("main/appointment.html")
 
 @bp.route('/createappt', methods=['GET', 'POST'])
 def appt():
     form = Appointment()
 
     if form.validate_on_submit():
-        appointment = models.Appointment(appt_title=form.title.data, appt_date=form.data.data, start_time=form.time.data, location=form.location.data, add_notes=form.notes.data, customer_Name=form.name.data, customer_email=form.email.data)
-        appointment.status = "Created Appointment"
-        db.session.add(appointment)
+        appts = AppointmentF()
+        appts.appt_title=form.title.data
+        appts.appt_datetime=datetime.datetime.combine(form.date.data, form.time.data)
+        appts.location=form.location.data
+        appts.add_notes=form.notes.data
+        appts.customer_Name=form.name.data
+        appts.customer_email=form.email.data
+        appts.appointment.status = "Created Appointment"
+        db.session.add(appts)
         db.session.commit()
-    return render_template("main.createappt", appointment=appointment)
+        flash('Successfully created the appointment!', category='success')
+    return render_template("main/createappt.html", appointment=appointment, form=form)
 
 @bp.route('/editappt/<int:appt_id>', methods=['GET', 'POST'])
 def edit(appt_id):
+    form = AppointmentF()
     appt = Appointment.query.get(appt_id)
-    appts = Appointment.query.filter_by(appt_id=appt_id)
-    appts = Appointment.query.all()
     if(request.method == "POST"):
-        appt.appt_title = request.form.get("editTitle")
-        appt.appt_date = request.form.get("editData")
-        appt.start_time = request.form.get("editTime")
-        appt.location = request.form.get("editLocation")
-        appt.add_notes = request.form.get("add/editnotes")
-        appt.customer_Name = request.form.get("editName")
-        appt.customer_email = request.form.get("editEmail")
+        appt.appt_title = form.title.data
+        appt.appt_datetime = datetime.datetime.combine(form.date.data, form.time.data)
+        appt.location = form.location.data
+        appt.add_notes = form.notes.data
+        appt.customer_Name = form.name.data
+        appt.customer_email = form.email.data
         appt.status = "Edited Appointment"
-        return render_template('viewappt.html', appts=appts)
-    return render_template('main.editappt', appts=appts)
+        db.session.add(appt)
+        db.session.commit()
+        return render_template('viewappt.html', appt=appt)
+    return render_template('main/editappt.html', form=form, appt=appt)
 
 @bp.route('/deleteappt/<int:appt_id>', methods=['GET', 'POST', 'DELETE'])
 def delete(appt_id):
-    appt = Appointment.query.filter_by(appt_id=appt_id).first()
+    appt = Appointment.query.get(appt_id)
     appt.status = "Deleted"
     db.session.delete(appt)
     db.session.commit()
+    flash('Successfully deleted appointment!', category='success')
+    return render_template('main/viewappt.html')
+
+@bp.route('/apptview', methods=['GET', 'POST'])
+def apptview():
     appts = Appointment.query.all()
-    return render_template('viewappt.html', appts=appts)
+    return render_template('main/viewappt.html', appts=appts)
 
 #
 #  Route for viewing and adding new tasks.

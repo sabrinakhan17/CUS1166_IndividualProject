@@ -1,24 +1,10 @@
 {% extends "menu.html" %}
 
-{% block main_content %}
+{% block content %}
+<h1>Appointment Actions:</h1>
+    <p><a href="{{url_for('main.createappt')}}">Create a New Appointment</a></p>
+    <p><a href="{{url_for('main.editappt')}}">Edit an Existing Appointment</a></p>
+    <p><a href="{{url_for('main.viewappt')}}">View Appointments</a></p>
+    <p><a href="{{url_for('main.viewappt')}}">Delete an Existing Appointment</a></p>
 
-<div class="page-content page-container" id="page-content">
-    <div class="padding">
-        <div class="row container d-flex justify-content-center">
-            <div class="col-lg-12">
-                <div class="card px-3">
-                    <div class="card-body">
-                        <h4 class="card-title">Appointment</h4>
-
-                        <h5>Appointment Actions:</h5>
-                        <p><a href="{{url_for('main.createappt')}}">Create a New Appointment</a></p>
-                        <p><a href="{{url_for('main.editappt')}}">Edit an Existing Appointment</a></p>
-                        <p><a href="{{url_for('main.viewappt')}}">View Appointments</a></p>
-                        <p><a href="{{url_for('main.viewappt')}}">Delete an Existing Appointment</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock content %}
