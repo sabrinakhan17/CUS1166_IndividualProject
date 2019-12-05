@@ -33,7 +33,7 @@ def appt():
         db.session.add(appts)
         db.session.commit()
         flash('Successfully created the appointment!', category='success')
-    return render_template("main/createappt.html", appointment=appointment, form=form)
+    return render_template("main/createappt.html", appts=appts, form=form)
 
 @bp.route('/editappt/<int:appt_id>', methods=['GET', 'POST'])
 def edit(appt_id):
@@ -49,8 +49,8 @@ def edit(appt_id):
         appt.status = "Edited Appointment"
         db.session.add(appt)
         db.session.commit()
-        return render_template('viewappt.html', appt=appt)
-    return render_template('main/editappt.html', form=form, appt=appt)
+        return redirect(url_for('viewappt.html', appt=appt))
+    return render_template("main/editappt.html", form=form, appt=appt)
 
 @bp.route('/deleteappt/<int:appt_id>', methods=['GET', 'POST', 'DELETE'])
 def delete(appt_id):
@@ -59,12 +59,12 @@ def delete(appt_id):
     db.session.delete(appt)
     db.session.commit()
     flash('Successfully deleted appointment!', category='success')
-    return render_template('main/viewappt.html')
+    return render_template("main/viewappt.html")
 
 @bp.route('/apptview', methods=['GET', 'POST'])
 def apptview():
     appts = Appointment.query.all()
-    return render_template('main/viewappt.html', appts=appts)
+    return render_template("main/viewappt.html", appts=appts)
 
 #
 #  Route for viewing and adding new tasks.
