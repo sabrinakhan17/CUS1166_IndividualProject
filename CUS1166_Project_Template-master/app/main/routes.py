@@ -33,6 +33,7 @@ def appt():
         db.session.add(appts)
         db.session.commit()
         flash('Successfully created the appointment!', category='success')
+        return redirect(url_for('main/viewappt'), appts=appts)
     return render_template("main/createappt.html", appts=appts, form=form)
 
 @bp.route('/editappt/<int:appt_id>', methods=['GET', 'POST'])
